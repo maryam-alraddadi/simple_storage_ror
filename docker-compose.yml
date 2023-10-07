@@ -13,5 +13,18 @@ services:
       MINIO_ROOT_PASSWORD: Strong#Pass#1234
     command: server --console-address ":9001" /data
 
+  postgres_db:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+
 volumes:
   minio_storage: {}
+  postgres_db:
+    driver: local
