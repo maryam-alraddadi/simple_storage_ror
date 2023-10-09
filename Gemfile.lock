@@ -66,11 +66,7 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-    argon2-kdf (0.2.0)
     bcrypt (3.1.19)
-    blind_index (2.4.0)
-      activesupport (>= 6.1)
-      argon2-kdf (>= 0.1.1)
     bootsnap (1.16.0)
       msgpack (~> 1.2)
     builder (3.2.4)
@@ -83,13 +79,15 @@ GEM
     erubi (1.12.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    httparty (0.21.0)
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     io-console (0.6.0)
     irb (1.8.1)
       rdoc
       reline (>= 0.3.8)
-    lockbox (1.3.0)
     loofah (2.21.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -103,6 +101,7 @@ GEM
     mini_mime (1.1.5)
     minitest (5.20.0)
     msgpack (1.7.2)
+    multi_xml (0.6.0)
     net-imap (0.4.0)
       date
       net-protocol
@@ -169,6 +168,7 @@ GEM
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2023.3)
       tzinfo (>= 1.0.0)
+    uuidtools (2.2.0)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
@@ -180,15 +180,15 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt (~> 3.1.7)
-  blind_index (~> 2.4)
   bootsnap
   debug
-  lockbox (~> 1.3)
+  httparty
   pg
   puma (~> 5.0)
   rails (~> 7.0.8)
   sqlite3 (~> 1.4)
   tzinfo-data
+  uuidtools
 
 RUBY VERSION
    ruby 3.2.2p53
