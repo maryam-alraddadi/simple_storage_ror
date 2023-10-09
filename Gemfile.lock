@@ -102,6 +102,9 @@ GEM
     minitest (5.20.0)
     msgpack (1.7.2)
     multi_xml (0.6.0)
+    net-ftp (0.2.0)
+      net-protocol
+      time
     net-imap (0.4.0)
       date
       net-protocol
@@ -116,6 +119,10 @@ GEM
       racc (~> 1.4)
     nokogiri (1.15.4-x64-mingw-ucrt)
       racc (~> 1.4)
+    open-uri (0.3.0)
+      stringio
+      time
+      uri
     pg (1.5.4)
     pg (1.5.4-x64-mingw-ucrt)
     psych (5.1.0)
@@ -163,11 +170,14 @@ GEM
     sqlite3 (1.6.6-x64-mingw-ucrt)
     stringio (3.0.8)
     thor (1.2.2)
+    time (0.2.2)
+      date
     timeout (0.4.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2023.3)
       tzinfo (>= 1.0.0)
+    uri (0.12.2)
     uuidtools (2.2.0)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
@@ -183,6 +193,8 @@ DEPENDENCIES
   bootsnap
   debug
   httparty
+  net-ftp
+  open-uri
   pg
   puma (~> 5.0)
   rails (~> 7.0.8)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_09_152956) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_09_204119) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_09_152956) do
     t.string "token_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "blob_storage", force: :cascade do |t|
+    t.binary "data", null: false
+    t.uuid "blob_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blob_id"], name: "index_blob_storage_on_blob_id"
   end
 
   create_table "blobs", id: :uuid, default: nil, force: :cascade do |t|
@@ -37,4 +45,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_09_152956) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "blob_storage", "blobs"
 end

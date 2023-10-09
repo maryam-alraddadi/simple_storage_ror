@@ -10,20 +10,27 @@ class Api::V1::BlobsController < ApplicationController
     access_key_id: "#{Rails.application.credentials.MINIO_ACCESS_KEY_ID}"
   }
   
+  @@LOCAL_DIR = "/home/maryam/storage"
   # @@minio_url = "#{ENV.fetch('MINIO_HOST')}/#{ENV.fetch('MINIO_BUCKET_NAME')}"
   # @@creds = {
   #   secret_access_key: "#{ENV.fetch('MINIO_SECRET_ACCESS_KEY')}",
   #   access_key_id: "#{ENV.fetch('MINIO_ACCESS_KEY_ID')}"
   # }
   
-  @@storage_service = "MINIO"
+  @@storage_service = "LOCALDIR"
   
   
   def show
     
+    id = params[:id]
+    
     case @@storage_service
     when "MINIO"
-      blob = get_file_from_bucket(params[:id])
+      blob = get_file_from_bucket(id)
+    when "LOCALDIR"
+      blob = get_file_from_dir(id)
+    when "DB"
+      blob = get_file_from_db(id)
     end
     
     render json: blob, status: 200
@@ -48,9 +55,13 @@ class Api::V1::BlobsController < ApplicationController
     case @@storage_service
     when "MINIO"
       blob = save_file_to_bucket(id, data)
+    when "LOCALDIR"
+      blob = save_file_to_dir(id, data)
+    when "DB"
+      blob = save_file_to_db(id, data)
     end
-
-    render json: blob, status: 201
+    
+    render json: {id: blob.id}, status: 201
   end
   
   
@@ -72,8 +83,7 @@ class Api::V1::BlobsController < ApplicationController
     response = HTTParty.get(request[:url], body: request[:body], headers: headers)
     
     if response.code == 200
-      str = response.to_s
-      data = Base64.encode64(str).gsub(/\n/, "")
+      data = convert_binary_to_base64(response)
       blob.data = data
       blob
     else
@@ -109,6 +119,66 @@ class Api::V1::BlobsController < ApplicationController
   end
   
   
+  
+  def save_file_to_dir(id, data)
+    path = "#{@@LOCAL_DIR}/#{id}"
+    file_data = convert_base64_to_file(data)
+    size = file_size_to_mb(file_data.size)
+    
+    File.open(path, 'wb') { |file| file.write(file_data) }
+    
+    blob = Blob.create({:id => id, :data => path, "size" => size})
+    blob
+  end
+  
+  
+  def get_file_from_dir(id)
+
+    blob = Blob.find_by(id: id)
+    bdata = File.open(blob.data, 'rb') { |f| f.read }
+    blob.data = convert_binary_to_base64(bdata)
+
+    blob
+  end
+  
+  
+  def save_file_to_db(id, data)
+    file = convert_base64_to_file(data)
+    size = file_size_to_mb(file.size)
+
+    blob = Blob.create({:id => id, "size" => size})
+    blob_storage = blob.create_blob_storage({:data => file})
+    blob.data = blob_storage.id
+    blob
+  end
+  
+  
+  
+  def get_file_from_db(id)
+
+    blob = blob = Blob.find_by(id: id)
+    blob.data = convert_binary_to_base64(blob.blob_storage.data)
+    blob
+    
+  end
+  
+  
+  # def save_file_to_ftp(id, data)
+
+  #   file = convert_base64_to_file(data)
+  #   tempfile = Tempfile.new("filename")
+  #   tempfile.binmode
+  #   tempfile.write(file)
+    
+  #   Net::FTP.open('127.0.0.1:21', 'one', '1234') do |ftp|
+  #     ftp.passive = true
+      
+  #     ftp.putbinaryfile(tempfile)
+  #   end
+  # end
+  
+  
+  
   def convert_base64_to_file(base64_data)
     return base64_data unless base64_data.present? && base64_data.is_a?(String)
 
@@ -117,6 +187,13 @@ class Api::V1::BlobsController < ApplicationController
     decoded_file
   end
   
+  
+  def convert_binary_to_base64(binary)
+    str = binary.to_s
+    Base64.encode64(str).gsub(/\n/, "")
+  end
+  
+
   def file_size_to_mb(size)
     '%.2f' % (size.to_f / 2**20)
   end
