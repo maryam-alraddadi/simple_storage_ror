@@ -48,7 +48,7 @@ in the project root run:
 the application uses Api keys as `Bearer ` tokens to authenticate users, only authenticated users can upload and retrieve files.
 to generate an Api key, first create a user
 
-```sh
+```bash
 curl --location --request POST 'http://localhost:3000/api/v1/users' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -61,9 +61,8 @@ curl --location --request POST 'http://localhost:3000/api/v1/users' \
 then you generate you first api key using your credentials as basic auth
 
 
-```sh
-curl -X POST http://localhost:3000/api-keys \
-	    -u meme:1234
+```bash
+curl -X POST http://localhost:3000/api-keys -u meme:1234
 
 # {
 #    "id":  1,
@@ -83,23 +82,23 @@ to upload a file, you must have a valid `id` in the form of a UUID, a UUID is a 
 the second field `data` represents the file encoded in `base64`
 
 
-```
+```bash
 curl --request POST 'http://localhost:3000/api/v1/blobs' \
-	 --header 'Authorization: Bearer 96a32f9e878411612a6af54c396a7519' \
-	 --header 'Content-Type: application/json' \
-	 --data-raw '{
+     --header 'Authorization: Bearer 96a32f9e878411612a6af54c396a7519' \
+     --header 'Content-Type: application/json' \
+     --data-raw '{
 			"id": "3f333df6-90a4-4fda-8dd3-9485d27cee36",
 			"data": "aGVsbG8gZnJvbSBkb2Nz"
-		}'
+       		}'
 ```
 
 
 ##### Retrieve
 
 retrieve the file using the same `id` used in upload:
-```
+```bash
 curl --request GET 'http://localhost:3000/api/v1/blobs/3f333df6-90a4-4fda-8dd3-9485d27cee36' \
-	 --header 'Authorization: Bearer 96a32f9e878411612a6af54c396a7519'
+     --header 'Authorization: Bearer 96a32f9e878411612a6af54c396a7519'
 ```
 
 
