@@ -85,12 +85,22 @@ the second field `data` represents the file encoded in `base64`
 
 ```
 curl --request POST 'http://localhost:3000/api/v1/blobs' \
-	 --header 'Authorization: Bearer b5c5de20cd76d31461f839e8b94f82f4' \
+	 --header 'Authorization: Bearer 96a32f9e878411612a6af54c396a7519' \
 	 --header 'Content-Type: application/json' \
 	 --data-raw '{
 			"id": "3f333df6-90a4-4fda-8dd3-9485d27cee36",
 			"data": "aGVsbG8gZnJvbSBkb2Nz"
 		}'
 ```
+
+
+##### Retrieve
+
+retrieve the file using the same `id` used in upload:
+```
+curl --request GET 'http://localhost:3000/api/v1/blobs/3f333df6-90a4-4fda-8dd3-9485d27cee36' \
+	 --header 'Authorization: Bearer 96a32f9e878411612a6af54c396a7519'
+```
+
 
 
