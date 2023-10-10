@@ -4,20 +4,14 @@ class Api::V1::BlobsController < ApplicationController
   
   prepend_before_action :authenticate_with_api_key! 
   
-  @@minio_url = "#{Rails.application.credentials.MINIO_HOST}/#{Rails.application.credentials.MINIO_BUCKET_NAME}"
+  @@LOCAL_DIR = ENV.fetch('LOCAL_DIR_PATH')
+  @@minio_url = "#{ENV.fetch('MINIO_HOST')}/#{ENV.fetch('MINIO_BUCKET_NAME')}"
   @@creds = {
-    secret_access_key: "#{Rails.application.credentials.MINIO_SECRET_ACCESS_KEY}",
-    access_key_id: "#{Rails.application.credentials.MINIO_ACCESS_KEY_ID}"
+    secret_access_key: "#{ENV.fetch('MINIO_SECRET_ACCESS_KEY')}",
+    access_key_id: "#{ENV.fetch('MINIO_ACCESS_KEY_ID')}"
   }
   
-  @@LOCAL_DIR = "/home/maryam/storage"
-  # @@minio_url = "#{ENV.fetch('MINIO_HOST')}/#{ENV.fetch('MINIO_BUCKET_NAME')}"
-  # @@creds = {
-  #   secret_access_key: "#{ENV.fetch('MINIO_SECRET_ACCESS_KEY')}",
-  #   access_key_id: "#{ENV.fetch('MINIO_ACCESS_KEY_ID')}"
-  # }
-  
-  @@storage_service = "LOCALDIR"
+  @@storage_service = ENV.fetch('STORAGE_SERVICE')
   
   
   def show

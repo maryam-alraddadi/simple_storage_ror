@@ -1,6 +1,7 @@
 version: "3"
 
 services:
+
   minio:
     image: minio/minio
     ports:
@@ -24,7 +25,26 @@ services:
     volumes:
       - postgres_db:/var/lib/postgresql/data
 
+
+  app: 
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres_db
+      - minio
+    ports: 
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - gem_cache:/usr/local/bundle/gems
+    env_file: .env
+    environment:
+      RAILS_ENV: development
+
+
 volumes:
+  gem_cache:
   minio_storage: {}
   postgres_db:
     driver: local

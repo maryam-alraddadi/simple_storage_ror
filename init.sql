@@ -1,0 +1,3 @@
+CREATE USER sammy;
+
+ALTER USER sammy WITH SUPERUSER;
