@@ -1,7 +1,6 @@
 version: "3"
 
 services:
-
   minio:
     image: minio/minio
     ports:
@@ -14,6 +13,25 @@ services:
       MINIO_ROOT_PASSWORD: Strong#Pass#1234
     command: server --console-address ":9001" /data
 
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://minio:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  create_buckets:
+    image: minio/mc
+    depends_on:
+      minio:
+        condition: service_healthy
+    restart: on-failure
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://minio:9000 admin Strong#Pass#1234;
+      /usr/bin/mc mb myminio/storage-bckt;
+      /usr/bin/mc policy set private myminio/storage-bckt;
+      "
+
   postgres_db:
     image: postgres:latest
     restart: always
@@ -24,16 +42,16 @@ services:
       - "5432:5432"
     volumes:
       - postgres_db:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
-
-  app: 
+  app:
     build:
       context: .
       dockerfile: Dockerfile
     depends_on:
       - postgres_db
       - minio
-    ports: 
+    ports:
       - "3000:3000"
     volumes:
       - .:/app
@@ -41,7 +59,6 @@ services:
     env_file: .env
     environment:
       RAILS_ENV: development
-
 
 volumes:
   gem_cache:
