@@ -26,7 +26,7 @@ populate the file with your environment variables:
 `DATABASE_USER` | username of db login
 `DATABASE_PASSWORD` | password of db login
 | `API_KEY_HMAC_SECRET_KEY` | random 32 byte string used to generate HMAC digests of api-key, can be created with `SecureRandom.hex(32)` |
-| `STORAGE_SERVICE` | to configure the storage backend, set this environment variable to one of the following values `MINIO | LOCALDIR | DB`|
+| `STORAGE_SERVICE` | to configure the storage backend, set this environment variable to one of the following values `MINIO - LOCALDIR - DB` |
 |`MINIO_HOST` | if `STORAGE_SERVICE` is set to "MINIO", configure minio variables, this one defines the full url for minio service ex: `http://127.0.0.1:9000`|
 | `MINIO_BUCKET_NAME` | the bucket that would be used for storing the files, if using `docker-compose.yml` make sure to update minio/mc |
 | `MINIO_ACCESS_KEY_ID` | used for accessing the minio service, can be created through MinIO console
